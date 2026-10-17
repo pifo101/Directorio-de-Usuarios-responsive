@@ -9,11 +9,15 @@
 <body>
     <header class="encabezado">
         <h1>Directorio de Usuarios</h1>
-        <input id="buscador" type="search" placeholder="Buscar por nombre..." aria-label="Buscar por nombre">
+        <div class="controles">
+            <input id="buscador" type="search" placeholder="Buscar por nombre..." aria-label="Buscar por nombre">
+            <button id="modo-oscuro" type="button">Modo oscuro</button>
+            <button id="mi-ubicacion" type="button">Mi ubicación</button>
+        </div>
     </header>
 
+    <p id="ubicacion" role="status"></p>
     <p id="estado" role="status">Cargando usuarios...</p>
-    
     <main id="lista" class="grid"></main>
 
     <script src="app.js"></script>

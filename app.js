@@ -1,11 +1,12 @@
-// 1. Referencias a elementos del HTML y datos de la aplicación.
 const URL_API = 'https://jsonplaceholder.typicode.com/users';
 const lista = document.querySelector('#lista');
 const estado = document.querySelector('#estado');
 const buscador = document.querySelector('#buscador');
+const botonTema = document.querySelector('#modo-oscuro');
+const botonUbicacion = document.querySelector('#mi-ubicacion');
+const ubicacion = document.querySelector('#ubicacion');
 
 let usuarios = [];
-// localStorage guarda texto: convertimos la cadena JSON de vuelta a un arreglo.
 let favoritos = [];
 try {
     const guardados = JSON.parse(localStorage.getItem('favoritos'));
@@ -15,15 +16,19 @@ try {
         localStorage.removeItem('favoritos');
     }
 } catch (error) {
-    // Si el texto no es JSON válido (por ejemplo "1,2"), empezamos de nuevo.
     localStorage.removeItem('favoritos');
 }
+
+const temaGuardado = localStorage.getItem('tema');
+if (temaGuardado === 'dark' || temaGuardado === 'light') {
+    document.documentElement.dataset.theme = temaGuardado;
+}
+actualizarBotonTema();
 
 function guardarFavoritos() {
     localStorage.setItem('favoritos', JSON.stringify(favoritos));
 }
 
-// 2. Pedimos los usuarios. await espera la respuesta sin congelar la página.
 async function cargarUsuarios() {
     try {
         const res = await fetch(URL_API);
@@ -37,7 +42,6 @@ async function cargarUsuarios() {
     }
 }
 
-// 3. Creamos las tarjetas a partir de los datos recibidos.
 function mostrarUsuarios(datos) {
     lista.innerHTML = '';
 
@@ -59,7 +63,6 @@ function mostrarUsuarios(datos) {
     });
 }
 
-// 4. Filtramos el arreglo original y volvemos a dibujar las tarjetas.
 function aplicarFiltro() {
     const texto = buscador.value.toLowerCase().trim();
     const filtrados = usuarios.filter((u) =>
@@ -74,7 +77,40 @@ function aplicarFiltro() {
 
 buscador.addEventListener('input', aplicarFiltro);
 
-// 5. Un solo listener sirve para todos los botones, incluso tras redibujar las tarjetas.
+function actualizarBotonTema() {
+    const oscuro = getComputedStyle(document.documentElement).colorScheme === 'dark';
+    botonTema.textContent = oscuro ? 'Modo claro' : 'Modo oscuro';
+}
+
+botonTema.addEventListener('click', () => {
+    const oscuro = getComputedStyle(document.documentElement).colorScheme === 'dark';
+    const tema = oscuro ? 'light' : 'dark';
+    document.documentElement.dataset.theme = tema;
+    localStorage.setItem('tema', tema);
+    actualizarBotonTema();
+});
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', actualizarBotonTema);
+
+botonUbicacion.addEventListener('click', () => {
+    if (!navigator.geolocation) {
+        ubicacion.textContent = 'Tu navegador no permite obtener la ubicación.';
+        return;
+    }
+
+    ubicacion.textContent = 'Obteniendo ubicación...';
+    navigator.geolocation.getCurrentPosition(
+        (posicion) => {
+            ubicacion.textContent = `Latitud: ${posicion.coords.latitude.toFixed(5)}, longitud: ${posicion.coords.longitude.toFixed(5)}`;
+        },
+        (error) => {
+            ubicacion.textContent = error.code === 1
+                ? 'No se concedió permiso para obtener la ubicación.'
+                : 'No se pudo obtener la ubicación.';
+        }
+    );
+});
+
 lista.addEventListener('click', (e) => {
     if (!e.target.classList.contains('fav')) return;
 
@@ -89,5 +125,4 @@ lista.addEventListener('click', (e) => {
     aplicarFiltro();
 });
 
-// Iniciamos la carga al abrir la página.
 cargarUsuarios();

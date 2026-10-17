@@ -1,4 +1,42 @@
-/* Primero diseñamos para móvil; las media queries amplían el diseño. */
+:root {
+    color-scheme: light;
+    --fondo: #f3f7f2;
+    --texto: #0c303c;
+    --tarjeta: #fff;
+    --boton: #d8f0cc;
+    --boton-texto: #0c303c;
+    --activo: #0c4848;
+    --activo-texto: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        color-scheme: dark;
+        --fondo: #142525;
+        --texto: #edf7ef;
+        --tarjeta: #203b3a;
+        --boton: #36584c;
+        --boton-texto: #edf7ef;
+        --activo: #84d878;
+        --activo-texto: #142525;
+    }
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --fondo: #142525;
+    --texto: #edf7ef;
+    --tarjeta: #203b3a;
+    --boton: #36584c;
+    --boton-texto: #edf7ef;
+    --activo: #84d878;
+    --activo-texto: #142525;
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -6,8 +44,8 @@
 
 body {
     font-family: system-ui, sans-serif;
-    background: #f3f7f2;
-    color: #0c303c;
+    background: var(--fondo);
+    color: var(--texto);
     padding: 1rem;
 }
 
@@ -22,12 +60,39 @@ body {
     font-size: clamp(1.5rem, 4vw, 2.5rem);
 }
 
+.controles {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+}
+
 #buscador {
     min-width: 0;
     padding: 0.75rem 1rem;
     border: 2px solid #84d878;
     border-radius: 999px;
     font-size: 1rem;
+}
+
+.controles button,
+.fav {
+    border: none;
+    background: var(--boton);
+    color: var(--boton-texto);
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.fav.activo {
+    background: var(--activo);
+    color: var(--activo-texto);
+}
+
+#ubicacion:not(:empty) {
+    margin-bottom: 1rem;
 }
 
 #estado {
@@ -42,7 +107,7 @@ body {
 
 .tarjeta {
     min-width: 0;
-    background: #fff;
+    background: var(--tarjeta);
     border-radius: 16px;
     padding: 1.25rem;
     box-shadow: 0 2px 8px rgb(0 0 0 / 0.08);
@@ -61,23 +126,16 @@ body {
 
 .fav {
     margin-top: 0.75rem;
-    border: none;
-    background: #d8f0cc;
-    padding: 0.5rem 1rem;
-    border-radius: 999px;
-    cursor: pointer;
 }
 
-.fav.activo {
-    background: #0c4848;
-    color: #fff;
-}
-
-/* Tablet: dos columnas desde 600px. */
 @media (min-width: 600px) {
     .encabezado {
+        align-items: flex-start;
+    }
+
+    .controles {
         flex-direction: row;
-        justify-content: space-between;
+        flex-wrap: wrap;
         align-items: center;
     }
 
@@ -86,7 +144,6 @@ body {
     }
 }
 
-/* Escritorio: tres columnas desde 1024px. */
 @media (min-width: 1024px) {
     body {
         padding: 2rem 4rem;
