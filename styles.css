@@ -1,0 +1,98 @@
+/* Primero diseñamos para móvil; las media queries amplían el diseño. */
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+body {
+    font-family: system-ui, sans-serif;
+    background: #f3f7f2;
+    color: #0c303c;
+    padding: 1rem;
+}
+
+.encabezado {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.encabezado h1 {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+#buscador {
+    min-width: 0;
+    padding: 0.75rem 1rem;
+    border: 2px solid #84d878;
+    border-radius: 999px;
+    font-size: 1rem;
+}
+
+#estado {
+    margin-bottom: 1rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+}
+
+.tarjeta {
+    min-width: 0;
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.08);
+    overflow-wrap: anywhere;
+}
+
+.tarjeta h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.tarjeta p {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.fav {
+    margin-top: 0.75rem;
+    border: none;
+    background: #d8f0cc;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.fav.activo {
+    background: #0c4848;
+    color: #fff;
+}
+
+/* Tablet: dos columnas desde 600px. */
+@media (min-width: 600px) {
+    .encabezado {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Escritorio: tres columnas desde 1024px. */
+@media (min-width: 1024px) {
+    body {
+        padding: 2rem 4rem;
+    }
+
+    .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
